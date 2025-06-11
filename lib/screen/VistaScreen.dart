@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 
+
 class VistaScreen extends StatelessWidget {
   final String notaId;
   final Map<dynamic, dynamic> nota;

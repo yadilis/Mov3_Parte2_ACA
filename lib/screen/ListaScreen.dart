@@ -45,7 +45,7 @@ class _ListaScreenState extends State<ListaScreen> {
               await FirebaseAuth.instance.signOut();
               Navigator.of(context).popUntil((route) => route.isFirst);
             },
-            child: Text('Cerrar sesión', style: TextStyle(color: Colors.white)),
+            child: Text('Cerrar sesión', style: TextStyle(color: const Color.fromARGB(255, 10, 10, 10))),
           ),
         ],
       ),
@@ -141,20 +141,8 @@ class _ListaScreenState extends State<ListaScreen> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => GuardarScreen(
-                notasRef: notasRef,
-              ),
-            ),
-          );
-        },
-        child: Icon(Icons.add),
-        tooltip: "Agregar Nota",
-      ),
+     
+      
     );
   }
 }

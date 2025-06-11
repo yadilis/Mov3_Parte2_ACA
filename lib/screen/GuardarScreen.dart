@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 class GuardarScreen extends StatefulWidget {
-  final String? notaId; // null para nueva nota
-  final Map<String, dynamic>? nota; // null para nueva nota
+  final String? notaId; 
+  final Map<String, dynamic>? nota; 
   final DatabaseReference? notasRef;
 
   const GuardarScreen({Key? key, this.notaId, this.nota, this.notasRef}) : super(key: key);
@@ -38,14 +38,14 @@ void initState() {
     final precio = double.parse(_precioController.text.trim());
 
     if (widget.notaId == null) {
-      // Nota nueva
+      
       await widget.notasRef!.push().set({
         'titulo': titulo,
         'descripcion': descripcion,
         'precio': precio,
       });
     } else {
-      // Actualizar nota existente
+     
       await widget.notasRef!.child(widget.notaId!).update({
         'titulo': titulo,
         'descripcion': descripcion,
