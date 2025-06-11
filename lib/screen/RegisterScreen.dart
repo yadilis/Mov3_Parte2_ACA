@@ -22,12 +22,11 @@ class _RegistroState extends State<Registro> {
 
   Future<void> registroFire(String correo, String contrasenia) async {
     try {
-      final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: correo,
         password: contrasenia,
       );
 
-      
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Registro exitoso. Inicia sesión.')),
       );
@@ -73,7 +72,6 @@ class _RegistroState extends State<Registro> {
                   controller: _correo,
                   decoration: const InputDecoration(
                     labelText: "Correo",
-                    prefixIcon: Icon(Icons.email),
                     border: OutlineInputBorder(),
                   ),
                 ),
@@ -83,19 +81,21 @@ class _RegistroState extends State<Registro> {
                   obscureText: true,
                   decoration: const InputDecoration(
                     labelText: "Contraseña",
-                    prefixIcon: Icon(Icons.lock),
                     border: OutlineInputBorder(),
                   ),
                 ),
                 const SizedBox(height: 30),
-                ElevatedButton(
-                  onPressed: () => registroFire(_correo.text, _contrasenia.text),
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: const Size(double.infinity, 50),
-                    backgroundColor: Colors.blue,
-                    foregroundColor: Colors.white,
+                SizedBox(
+                  width: double.infinity,
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: () => registroFire(_correo.text, _contrasenia.text),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF9E70EE),
+                      foregroundColor: Colors.white,
+                    ),
+                    child: const Text("Registrarse"),
                   ),
-                  child: const Text("Registrarse"),
                 ),
                 const SizedBox(height: 20),
                 TextButton(
@@ -105,7 +105,10 @@ class _RegistroState extends State<Registro> {
                       MaterialPageRoute(builder: (_) => const Login()),
                     );
                   },
-                  child: const Text("¿Ya tienes cuenta? Inicia sesión"),
+                  child: const Text(
+                    " Inicia sesión",
+                    style: TextStyle(color: Color(0xFF9E70EE)),
+                  ),
                 )
               ],
             ),

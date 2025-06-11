@@ -1,5 +1,3 @@
-
-
 import 'package:app_notas/screen/ListaScreen.dart';
 import 'package:app_notas/screen/RegisterScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -25,7 +23,7 @@ class _LoginState extends State<Login> {
 
   Future<void> loginFire(String correo, String contrasenia, BuildContext context) async {
     try {
-      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: correo,
         password: contrasenia,
       );
@@ -59,40 +57,39 @@ class _LoginState extends State<Login> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.lock_outline, size: 100, color: Colors.blue),
-              const SizedBox(height: 20),
               const Text(
                 "Iniciar Sesión",
-                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 40),
               TextField(
                 controller: _correo,
                 decoration: const InputDecoration(
                   labelText: "Correo",
-                  prefixIcon: Icon(Icons.email),
                   border: OutlineInputBorder(),
                 ),
               ),
               const SizedBox(height: 20),
               TextField(
                 controller: _contrasenia,
+                obscureText: true,
                 decoration: const InputDecoration(
                   labelText: "Contraseña",
-                  prefixIcon: Icon(Icons.lock),
                   border: OutlineInputBorder(),
                 ),
-                obscureText: true,
               ),
               const SizedBox(height: 30),
-              ElevatedButton(
-                onPressed: () => loginFire(_correo.text, _contrasenia.text, context),
-                style: ElevatedButton.styleFrom(
-                  minimumSize: const Size(double.infinity, 50),
-                  backgroundColor: Colors.blue,
-                  foregroundColor: Colors.white,
+              SizedBox(
+                width: double.infinity,
+                height: 45,
+                child: ElevatedButton(
+                  onPressed: () => loginFire(_correo.text, _contrasenia.text, context),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF9E70EE), 
+                    foregroundColor: Colors.white,
+                  ),
+                  child: const Text("Ingresar"),
                 ),
-                child: const Text("Ingresar"),
               ),
               const SizedBox(height: 20),
               TextButton(
@@ -102,7 +99,10 @@ class _LoginState extends State<Login> {
                     MaterialPageRoute(builder: (context) => const Registro()),
                   );
                 },
-                child: const Text("¿No tienes cuenta? Regístrate aquí"),
+                child: const Text(
+                  "¿No tienes cuenta? Regístrate aquí",
+                  style: TextStyle(color: Color(0xFF9E70EE)), 
+                ),
               ),
             ],
           ),

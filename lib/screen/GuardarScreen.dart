@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 class GuardarScreen extends StatefulWidget {
-  final String? notaId; 
-  final Map<String, dynamic>? nota; 
+  final String? notaId;
+  final Map<String, dynamic>? nota;
   final DatabaseReference? notasRef;
 
   const GuardarScreen({Key? key, this.notaId, this.nota, this.notasRef}) : super(key: key);
@@ -19,16 +19,15 @@ class _GuardarScreenState extends State<GuardarScreen> {
   late TextEditingController _descripcionController;
   late TextEditingController _precioController;
 
- @override
-void initState() {
-  super.initState();
-  _tituloController = TextEditingController(text: widget.nota?['titulo'] ?? '');
-  _descripcionController = TextEditingController(text: widget.nota?['descripcion'] ?? '');
-  _precioController = TextEditingController(
-    text: widget.nota != null ? widget.nota!['precio'].toString() : '',
-  );
-}
-
+  @override
+  void initState() {
+    super.initState();
+    _tituloController = TextEditingController(text: widget.nota?['titulo'] ?? '');
+    _descripcionController = TextEditingController(text: widget.nota?['descripcion'] ?? '');
+    _precioController = TextEditingController(
+      text: widget.nota != null ? widget.nota!['precio'].toString() : '',
+    );
+  }
 
   Future<void> guardarNota() async {
     if (!_formKey.currentState!.validate()) return;
@@ -38,14 +37,12 @@ void initState() {
     final precio = double.parse(_precioController.text.trim());
 
     if (widget.notaId == null) {
-      
       await widget.notasRef!.push().set({
         'titulo': titulo,
         'descripcion': descripcion,
         'precio': precio,
       });
     } else {
-     
       await widget.notasRef!.child(widget.notaId!).update({
         'titulo': titulo,
         'descripcion': descripcion,
@@ -71,6 +68,7 @@ void initState() {
     return Scaffold(
       appBar: AppBar(
         title: Text(isEditing ? 'Editar Nota' : 'Guardar Nota'),
+       
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -80,33 +78,50 @@ void initState() {
             children: [
               TextFormField(
                 controller: _tituloController,
-                decoration: InputDecoration(labelText: 'Título'),
+                decoration: const InputDecoration(
+                  labelText: 'Título',
+                  border: OutlineInputBorder(),
+                ),
                 validator: (value) =>
                     value == null || value.isEmpty ? 'Ingrese un título' : null,
               ),
+              const SizedBox(height: 16),
               TextFormField(
                 controller: _descripcionController,
-                decoration: InputDecoration(labelText: 'Descripción'),
+                decoration: const InputDecoration(
+                  labelText: 'Descripción',
+                  border: OutlineInputBorder(),
+                ),
                 maxLines: 3,
-                validator: (value) => value == null || value.isEmpty
-                    ? 'Ingrese una descripción'
-                    : null,
+                validator: (value) =>
+                    value == null || value.isEmpty ? 'Ingrese una descripción' : null,
               ),
+              const SizedBox(height: 16),
               TextFormField(
                 controller: _precioController,
-                decoration: InputDecoration(labelText: 'Precio'),
-                keyboardType: TextInputType.numberWithOptions(decimal: true),
+                decoration: const InputDecoration(
+                  labelText: 'Precio',
+                  border: OutlineInputBorder(),
+                ),
+                keyboardType: const TextInputType.numberWithOptions(decimal: true),
                 validator: (value) {
                   if (value == null || value.isEmpty) return 'Ingrese un precio';
-                  if (double.tryParse(value) == null)
-                    return 'Ingrese un precio válido';
+                  if (double.tryParse(value) == null) return 'Ingrese un precio válido';
                   return null;
                 },
               ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: guardarNota,
-                child: Text(isEditing ? 'Guardar Cambios' : 'Guardar'),
+              const SizedBox(height: 24),
+              SizedBox(
+                width: double.infinity,
+                height: 45,
+                child: ElevatedButton(
+                  onPressed: guardarNota,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF9E70EE),
+                    foregroundColor: Colors.white,
+                  ),
+                  child: Text(isEditing ? 'Guardar Cambios' : 'Guardar'),
+                ),
               ),
             ],
           ),
