@@ -1,90 +1,109 @@
-import 'package:flutter/material.dart';
+
+
+import 'package:app_notas/screen/ListaScreen.dart';
+import 'package:app_notas/screen/RegisterScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
-import 'RegisterScreen.dart';
+class Login extends StatefulWidget {
+  const Login({super.key});
 
-class LoginScreen extends StatefulWidget {
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  State<Login> createState() => _LoginState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  final _formKey = GlobalKey<FormState>();
-
-  bool _isLoading = false;
-  String? _error;
-
-  Future<void> _login() async {
-    if (!_formKey.currentState!.validate()) return;
-
-    setState(() {
-      _isLoading = true;
-      _error = null;
-    });
-
-    try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: _emailController.text.trim(),
-          password: _passwordController.text.trim());
-    } on FirebaseAuthException catch (e) {
-      setState(() {
-        _error = e.message;
-      });
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
-    }
-  }
+class _LoginState extends State<Login> {
+  final TextEditingController _correo = TextEditingController();
+  final TextEditingController _contrasenia = TextEditingController();
 
   @override
   void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
+    _correo.dispose();
+    _contrasenia.dispose();
     super.dispose();
+  }
+
+  Future<void> loginFire(String correo, String contrasenia, BuildContext context) async {
+    try {
+      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: correo,
+        password: contrasenia,
+      );
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => ListaScreen()),
+      );
+    } on FirebaseAuthException catch (e) {
+      String mensaje = '';
+      if (e.code == 'user-not-found') {
+        mensaje = 'No existe un usuario con ese correo.';
+      } else if (e.code == 'wrong-password') {
+        mensaje = 'Contraseña incorrecta.';
+      } else {
+        mensaje = 'Error: ${e.message}';
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(mensaje)),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Login')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
+      backgroundColor: Colors.white,
+      body: Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 30),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              if (_error != null)
-                Text(_error!, style: TextStyle(color: Colors.red)),
-              TextFormField(
-                controller: _emailController,
-                decoration: InputDecoration(labelText: 'Email'),
-                validator: (val) =>
-                    val != null && val.contains('@') ? null : 'Email inválido',
+              const Icon(Icons.lock_outline, size: 100, color: Colors.blue),
+              const SizedBox(height: 20),
+              const Text(
+                "Iniciar Sesión",
+                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
               ),
-              TextFormField(
-                controller: _passwordController,
-                decoration: InputDecoration(labelText: 'Contraseña'),
+              const SizedBox(height: 40),
+              TextField(
+                controller: _correo,
+                decoration: const InputDecoration(
+                  labelText: "Correo",
+                  prefixIcon: Icon(Icons.email),
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 20),
+              TextField(
+                controller: _contrasenia,
+                decoration: const InputDecoration(
+                  labelText: "Contraseña",
+                  prefixIcon: Icon(Icons.lock),
+                  border: OutlineInputBorder(),
+                ),
                 obscureText: true,
-                validator: (val) =>
-                    val != null && val.length >= 6 ? null : '6+ caracteres',
               ),
-              SizedBox(height: 20),
-              _isLoading
-                  ? CircularProgressIndicator()
-                  : ElevatedButton(
-                      onPressed: _login,
-                      child: Text('Iniciar sesión'),
-                    ),
+              const SizedBox(height: 30),
+              ElevatedButton(
+                onPressed: () => loginFire(_correo.text, _contrasenia.text, context),
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size(double.infinity, 50),
+                  backgroundColor: Colors.blue,
+                  foregroundColor: Colors.white,
+                ),
+                child: const Text("Ingresar"),
+              ),
+              const SizedBox(height: 20),
               TextButton(
                 onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (_) => RegisterScreen()));
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const Registro()),
+                  );
                 },
-                child: Text('¿No tienes cuenta? Regístrate'),
-              )
+                child: const Text("¿No tienes cuenta? Regístrate aquí"),
+              ),
             ],
           ),
         ),

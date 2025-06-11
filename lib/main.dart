@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
 import 'screen/ListaScreen.dart';
 import 'screen/LoginScreen.dart';
 import 'firebase_options.dart';
@@ -45,7 +44,7 @@ class AuthWrapper extends StatelessWidget {
         }
 
     
-        return LoginScreen();
+        return Login();
       },
     );
   }
